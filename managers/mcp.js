@@ -73,7 +73,6 @@ module.exports = (app) => {
 			case "PopulatePrerolledOffers":
 				checkValidProfileID("campaign");
 				break;
-
 			case "PurchaseCatalogEntry":
 				checkValidProfileID("common_core");
 				const shop = require("../shop.json")
@@ -261,18 +260,16 @@ module.exports = (app) => {
 			case "SetItemFavoriteStatus":
 				checkValidProfileID("campaign", "athena");
 
-				if (typeof req.body.bFavorite === "boolean" && profileData.items[req.body.targetItemId].attributes.favorite != req.body.bFavorite) {
-					Profile.changeItemAttribute(profileData, req.body.targetItemId, "favorite", req.body.bFavorite, profileChanges);
+				if (typeof req.body.bFavorite === "boolean" && profileData.items[req.body.lockerItem].attributes["favorite"] == req.body.bFavorite) {
+					Profile.changeItemAttribute(profileData, req.body.lockerItem, "favorite", req.body.bFavorite, profileChanges);
 				}
 
-				break;
+				break; 
 
 			case "SetItemFavoriteStatusBatch":
 				checkValidProfileID("campaign", "athena");
 				req.body.itemIds.forEach((itemId, index) => {
-					if (typeof itemId === "string" && typeof req.body.itemFavStatus[index] === "boolean") {
-						Profile.changeItemAttribute(profileData, itemId, "favorite", req.body.itemFavStatus[index]), profileChanges;
-					}
+					Profile.changeItemAttribute(profileData, itemId, "favorite", !profileData.items[itemId].attributes["favorite"], profileChanges);
 				});
 				break;
 
